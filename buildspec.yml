@@ -11,7 +11,7 @@ phases:
     commands:
       - echo "🔑 Login to Amazon ECR..."
       - aws --version
-      - $(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 652615011572.dkr.ecr.$AWS_REGION.amazonaws.com)
+      - $(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 767397791789.dkr.ecr.$AWS_REGION.amazonaws.com)
 
       - echo "📦 Installing dependencies..."
       - npm install
@@ -21,11 +21,11 @@ phases:
     commands:
       - echo "⚙️ Building the Docker image..."
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG 652615011572.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG 767397791789.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:
     commands:
       - echo "🚀 Pushing the Docker image to ECR..."
-      - docker push 652615011572.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push 767397791789.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo "✅ Build completed successfully."
 artifacts:
   files:
