@@ -3,24 +3,17 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "⬇️ Installing Sonar Scanner..."
+      - echo "Installing SonarScanner..."
       - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
       - unzip -q sonar-scanner.zip -d /opt
       - export PATH=$PATH:/opt/sonar-scanner-5.0.1.3006-linux/bin
+      - echo "SonarScanner installed"
 
   build:
     commands:
-      - echo "🔍 Running SonarCloud analysis..."
-      # # ✅ fetch token from Secrets Manager
-      # - export SONAR_TOKEN=$(aws secretsmanager get-secret-value \
-      #     --secret-id SONAR_TOKEN \
-      #     --query SecretString \
-      #     --output text)
-
-      # ✅ run sonar scanner
+      - echo "Running SonarQube analysis..."
       - sonar-scanner \
-          -Dsonar.organization=maulanaakbrr \
-          -Dsonar.projectKey=maulanaakbrr_Selecao \
+          -Dsonar.projectKey=my-node-app \
           -Dsonar.sources=. \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.token=$SONAR_TOKEN
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
