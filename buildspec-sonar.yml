@@ -11,11 +11,11 @@ phases:
   build:
     commands:
       - echo "🔍 Running SonarCloud analysis..."
-      # ✅ fetch token from Secrets Manager
-      - export SONAR_TOKEN=$(aws secretsmanager get-secret-value \
-          --secret-id SONAR_TOKEN \
-          --query SecretString \
-          --output text)
+      # # ✅ fetch token from Secrets Manager
+      # - export SONAR_TOKEN=$(aws secretsmanager get-secret-value \
+      #     --secret-id SONAR_TOKEN \
+      #     --query SecretString \
+      #     --output text)
 
       # ✅ run sonar scanner
       - sonar-scanner \
