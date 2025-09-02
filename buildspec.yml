@@ -4,7 +4,7 @@ env:
   variables:
     IMAGE_REPO_NAME: selecao
     IMAGE_TAG: latest
-    AWS_REGION: ap-southeast-2
+    AWS_REGION: ap-southeast-1
     AWS_ACCOUNT_ID: "767397791789"
 
 phases:
