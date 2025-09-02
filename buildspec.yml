@@ -5,25 +5,19 @@ env:
     IMAGE_REPO_NAME: selecao
     IMAGE_TAG: latest
     AWS_REGION: ap-southeast-2
-    # The AWS_ACCOUNT_ID is automatically provided by CodeBuild.
     AWS_ACCOUNT_ID: "767397791789"
 
 phases:
-  # Added the 'install' phase to enable the Docker and Node.js runtimes.
-  # This is the main fix for the "command not found" error.
   install:
-    runtime-versions:
-      nodejs: 20
-      docker: 20
-  
+    commands:
+      - echo "Installing dependencies..."
+      - npm install
+
   pre_build:
     commands:
-      - echo "🔑 Login to Amazon ECR..."
+      - echo "🔑 Logging in to Amazon ECR..."
       - aws --version
-      # Using the $AWS_ACCOUNT_ID variable instead of a hardcoded number.
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      - echo "📦 Installing dependencies..."
-      - npm install
       - echo "🧪 Running tests..."
       - npm test
 
@@ -38,11 +32,8 @@ phases:
       - echo "🚀 Pushing the Docker image to ECR..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo "✅ Build completed successfully."
+      - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
 
-# Note: Since the goal is to push a Docker image to ECR, you often don't need
-# to create a build artifact in S3. You can remove this 'artifacts' section
-# if you don't have other files you need to save.
 artifacts:
   files:
-    - '**/*'
-  discard-paths: yes
+    - imagedefinitions.json
