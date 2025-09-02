@@ -14,4 +14,6 @@ phases:
   build:
     commands:
       - echo "Running SonarCloud analysis..."
+      - cat $SONAR_PROJECT_KEY
+      - cat $SONAR_ORGANIZATION
       - /opt/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
