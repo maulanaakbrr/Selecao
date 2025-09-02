@@ -5,23 +5,31 @@ phases:
     commands:
       - echo "⬇️ Installing dependencies for Sonar testing..."
       - npm install
+      # install sonar-scanner
       - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-      - unzip sonar-scanner.zip -d /opt
+      - unzip -q sonar-scanner.zip -d /opt
       - export PATH=$PATH:/opt/sonar-scanner-5.0.1.3006-linux/bin
 
   pre_build:
     commands:
       - echo "🧪 Running unit tests with coverage..."
+      # Ensure coverage/lcov.info is generated
       - npm test -- --coverage || echo "⚠️ Tests failed, continuing Sonar scan..."
 
   build:
     commands:
       - echo "🔍 Running SonarCloud analysis..."
-      - export SONAR_TOKEN=$(aws secretsmanager get-secret-value --secret-id sonarcloud-token --query SecretString --output text | jq -r .SONAR_TOKEN)
+      # Fetch token securely from Secrets Manager (must exist!)
+      - export SONAR_TOKEN=$(aws secretsmanager get-secret-value \
+          --secret-id sonarcloud-token \
+          --query SecretString \
+          --output text | jq -r .SONAR_TOKEN)
+
+      # Run sonar scanner
       - sonar-scanner \
-          -Dsonar.organization=maulanaakbrr \
-          -Dsonar.projectKey=maulanaakbrr_Selecao \
+          -Dsonar.organization=maulanaakbrr \            # ✅ Your SonarCloud org
+          -Dsonar.projectKey=maulanaakbrr_Selecao \      # ✅ Matches project in SonarCloud
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.token=$SONAR_TOKEN \                   # ✅ Use sonar.token (not sonar.login, it's deprecated)
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
