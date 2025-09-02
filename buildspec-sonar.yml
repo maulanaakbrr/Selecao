@@ -3,18 +3,15 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11  # Required by SonarScanner
+      java: corretto11
     commands:
       - echo "Installing Sonar Scanner CLI..."
       - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
       - unzip sonar-scanner.zip -d /opt
       - export PATH=$PATH:/opt/sonar-scanner-5.0.1.3006-linux/bin
+      - sonar-scanner -v   # verify correct version
 
   build:
     commands:
       - echo "Running SonarCloud analysis..."
-      - sonar-scanner \
-          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.organization=$SONAR_ORGANIZATION \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_TOKEN
+      - /opt/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
