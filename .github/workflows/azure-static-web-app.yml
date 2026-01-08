@@ -5,6 +5,5 @@
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/" 
-          output_location: "" 
-          # TAMBAHKAN BARIS DI BAWAH INI
-          skip_app_build: true
+          output_location: "dist" # Sesuaikan dengan folder hasil build kamu
+          app_build_command: "npm run build" # Atau perintah build lainnya
