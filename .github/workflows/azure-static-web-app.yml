@@ -4,6 +4,6 @@
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"  # Lokasi index.html kamu
+          app_location: "/" # Lokasi file index.html kamu
           output_location: "" # Biarkan kosong karena tidak ada folder hasil build
-          skip_app_build: true # <--- TAMBAHKAN INI untuk memperbaiki error Oryx
+          skip_app_build: true # <--- TAMBAHKAN BARIS INI untuk memperbaiki error Oryx
